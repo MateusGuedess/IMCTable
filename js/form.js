@@ -12,12 +12,22 @@ btnAdicionar.addEventListener("click", (e) => {
     let paciente = obtemPacienteDoFormulario(form)
 
     let pacienteTr = montaTr(paciente)
-    console.log(pacienteTr)
+
+    let erros = validaPaciente(paciente)
+
+    if(erros.length > 0) {
+        exibeMensagemErro(erros)
+        return
+    }
+
     let tbody = document.querySelector("#tabela-pacientes")
 
     tbody.appendChild(pacienteTr)
 
     form.reset()
+    let mensagensErro = document.querySelector("#mensagem-erro")
+    mensagensErro.innerHTML = ""
+
 })
 
 const obtemPacienteDoFormulario = (form) => {
@@ -53,4 +63,35 @@ function montaTd(dado, classe) {
     td.classList.add(classe)
 
     return td
+}
+
+function validaPaciente(paciente) {
+
+    let erros = []
+
+    if(paciente.nome.length == 0) erros.push("Nome não pode ser vazio")
+
+    if(!validaPeso(paciente.peso)) erros.push("O peso é invalido")
+
+    if(!validaAltura(paciente.altura)) erros.push("Altura é Invalida")
+
+    if(paciente.gordura.length == 0) erros.push("A gordura não pode ser em branco")
+
+    if(paciente.peso.length == 0) erros.push("peso não pode ser em branco")
+
+    if(paciente.altura.length == 0) erros.push("Altura não pode ser vazia")
+
+    return erros;
+}
+
+function exibeMensagemErro(erros){
+    let ul = document.querySelector("#mensagem-erro")
+    ul.innerHTML = ""
+
+    erros.forEach(function(erro) {
+        let li = document.createElement("li")
+        li.textContent = erro
+
+        ul.appendChild(li)
+    })
 }
